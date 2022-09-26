@@ -1,0 +1,48 @@
+Below is an example of an R code chunk which can be executed from within the R Notebook. You can do this by clicking the green triangle to the top right of the chunk area within the Notebook. If you wanted to run all the code up until, and including, this code chunk you can click the grey triangle with the green bar [^1].
+
+[^1]: In this case there is no previous code so it would make no difference but often RMarkdown contains multiple code chunks.
+
+```{r}
+# This is an R code chunk
+print("Hello cruel world")
+```
+
+So now you can handle the RMarkdown basics.  Let's move onto R.
+
+
+# 2. Exploring the use of R using R {#WS2}
+
+## 2.1 Demand for R programmers
+
+How useful are R skills and tools? An [analysis](https://towardsdatascience.com/what-are-the-in-demand-skills-for-data-scientists-in-2020-a060b7f31b11) of 2681 data scientist job postings from 8 North American cities on January 25th, 2020 indicated the top 10 tools required by the employers are:
+
+    Python (62%)
+    SQL (40%)
+    R (39%)
+    Spark (21%)
+    Cloud (20%)
+    Amazon Web Services (20%)
+    Java (19%)
+    Tensorflow (16%)
+    Hadoop (15%)
+    SAS (13%)
+
+The data was collected by analysing online job adverts for data scientists on the Indeed website in North America. Note that Tools is a categorical and multi-valued attribute of a job listing, i.e., one listing could have zero or more tool categories associated, thus the percentages do not sum to 100%. NB 14% of the sampled job listings are excluded (since it is stated that only 86% of adverts identified skills or tools).
+
+**Exercise 2.1:** It's important to look at the data critically, though we must accept nothing is certain or perfect! What questions or concerns might you have?
+
+Since we're thinking about data and data analysis, it would be helpful to visualise the data. Unfortunately, we don't have access to the raw data so we will need to reproduce it. Therefore I have 'scraped' some of the data from their article and plugged this into R (see below). Don't worry about the coding details for the present although be aware that for reasons of simplicity I'm just using Base R for the graphics (functions like `pie()` and `barplot()`). Later we will introduce the {ggplot2}[^3] package which will enable almost complete control and flexibility in producing beautiful data visualisations, however, if you are already a confident R programmer feel free to jump ahead.
+
+```{r}
+#Reproduce the data from the January 2020 required tools for Data Scientists
+
+percent <- c(62,40,39,21,20,20,19,16,15,13)
+skills <- c("Python","SQL","R","Spark","Cloud","AWS","Java","TensorFlow","Hadoop","SAS")
+
+#Generate the pie chart
+
+pie(percent, main = "Pie chart for most in demand language for machine learning", labels = skills)
+?pie
+```
+
+
