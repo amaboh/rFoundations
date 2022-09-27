@@ -2,6 +2,11 @@ Below is an example of an R code chunk which can be executed from within the R N
 
 [^1]: In this case there is no previous code so it would make no difference but often RMarkdown contains multiple code chunks.
 
+
+#install packages 
+
+pacman::p_load(pacman,modeest)
+
 ```{r}
 # This is an R code chunk
 print("Hello cruel world")
@@ -194,4 +199,134 @@ The other way to retrieve specific observations is when the rows have names e.g.
 # Retrieve the observation named "Valiant"
 df["Valiant",]
 ```
+**Exercise 3.9:** Change the number of cylinders for the Valiant to 12.
 
+```{r}
+df["Valiant",2] <- 18
+
+df["Valiant",]
+```
+
+# 4. Describing Data{#WS4} 
+
+## 4.1 Measures of location
+
+Let's see how to use R to compute the measures of location (mean, median, and mode) and spread (range, inter quartile range, standard deviation and variance):
+
+We are using a small vector of numeric data
+
+```{r}
+data_vector <-c(4,7,2,5,6,2)
+```
+
+### Mean
+
+```{r}
+mean(data_vector)
+```
+
+
+```{r}
+median(data_vector)
+```
+
+### Mode
+
+Unlike the mean and the median there is *no* built in R function to compute the mode.  There are many ways of implementing our own mode function.  As a hint consider turning the vector into a table of frequencies that can then be sorted in decreasing order.  You can see our solution [here](#Ans4.1) in the Appendix.
+
+```{r}
+summary(data_vector)
+```
+```{r}
+# Define a new function called mode
+mode <- function(v) {
+# calculate mode
+# Just some dummy code you need to update as the answer is probably
+# not 42 (just saying!)
+return(42)
+}
+
+# Apply the function to our vector
+mode(data_vector)
+```
+
+Alternatively, more easily, we can install an R package {modeest} that contains a mode function.
+
+```{r}
+library(modeest)
+mfv(data_vector, method="mfv") #mfv stands for Most Frequent Value aka mode
+```
+
+### Weighted Mean
+
+The weighted arithmetic mean is similar to an ordinary arithmetic mean (the most common type of average), except that instead of each of the data points contributing equally to the final average, some data points contribute more than others. The notion of weighted mean plays a role in descriptive statistics and also occurs in a more general form in several other areas of mathematics.
+
+You can see the code below that uses the weighted mean function.
+
+```{r}
+grade.point <- c(17, 18, 16)
+credit <- c(15,15,30)
+
+weighted.mean(grade.point,credit)
+```
+
+## 4.2 Measures of variation
+
+### Range 
+
+Range --> Minimum and the maximum value
+
+```{r}
+range(data_vector)
+```
+
+### Interquartile range (IQR)
+
+IQR: 25th and 75th percentile values
+```{r}
+IQR(data_vector)
+```
+
+This is based on the 25th and 75th percentile, which can also be computed in R using the quantile function:
+
+```{r}
+quantile(data_vector,c(0.25,0.75))
+```
+
+### Standard Deviation
+```{r}
+sd(data_vector)
+```
+
+#variance
+```{r}
+var(data_vector)
+```
+
+# 5. Exploring Data{#WS5}
+
+In this part of the lab session the key objectives are to use R through RStudio to read in a small set of data and to explore the data. In R, it is possible to read data from different file formats:
+
+ * manual input
+ * plain text
+ * delimited text - such as .csv/.tsv files
+ * spreadsheets
+ * SAS formats 
+ 
+ ## Reding in a csv file
+
+So far we have made use of data that is already in R or input our own. In practice often data will be provided in .csv fomat and R makes it easy to read it in.
+
+ * Save a copy of that data in the same directory where you have saved this .Rmd file you are currently going through
+ *read data from worm:
+ 
+```{r}
+worm <- read.csv("worms.csv")
+```
+
+If you want to check what the data looks like:
+```{r}
+head(worm, n=10)
+```
+
+ 
