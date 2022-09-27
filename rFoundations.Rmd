@@ -41,8 +41,157 @@ skills <- c("Python","SQL","R","Spark","Cloud","AWS","Java","TensorFlow","Hadoop
 
 #Generate the pie chart
 
-pie(percent, main = "Pie chart for most in demand language for machine learning", labels = skills)
+pie(percent, main = "Pie chart for most in demand language for machine learning", labels = skills, clockwise = TRUE)
 ?pie
 ```
+```{r}
+# NB we have already reproduced the data: percent and skill come from the 
+# previous piechart chunk
 
+# Generate a bar chart
+
+barplot(percent, 
+        main = "Bar chart of in-demand Data Scientist tools (Jan 2020)",
+        sub = "Source: https://j.mp/2Ga8CD1", 
+        ylab = "Percentage of listings that mention tool", 
+        names.arg = skills,
+        cex.names = 0.7,   # shrinks text size so fits on x-axis
+        col="darkolivegreen", 
+        density = c(100, 50, 100, 50, 50, 50, 50, 50, 50, 50))
+```
+In the previous task you may well have largely relied on the provided R code. Now we move onto learning about basic R syntax and some coding exercises for you to undertake.
+
+Suppose I'm trying to calculate how much money I'm going to make from my *Modern Data* book. There are several different things I will need to store:
+
+-   `sales` how many copies I'll sell `sales`\
+-   `price` the price per copy
+-   `numberStudents` number of students in the class (assume I sell one copy per student)
+-   `recommend` the proportion of students so impressed that they recommend the book to friends and family
+-   `income` the income generated
+
+Let's turn this into R.
+
+```{r}
+#Compute income from sales of Ama's book
+
+price <- 10 
+numOfStudents <- 100
+recommend <- 0.5
+
+sales <- numOfStudents * (1 + recommend)
+income <- sales * price
+paste("Ama would earn", income)
+```
+Although we could just output `income`, I have added some text to make the output of the code easier to interpret with the `paste()` function to combine a character string literal delimited by quotation marks and the calculated income.
+
+**Exercise 3.1:** Change the number of students to 200 and the recommendation rate to 0.2. What's my new estimated income?
+
+**Exercise 3.2:** Update the sales income R code to handle tax. Assume that income is taxed at a flat rate of 20%. Modify the above R code to output gross income and net (after tax) income. Using RStudio you can edit this Week 1 Worksheet Notebook.
+
+```{r}
+numOfStudents <- 200
+
+recommend <- 0.2
+
+income <- numOfStudents * (1 + recommend)
+print(income)
+
+grossIncome <- income
+
+netIncome <- grossIncome * (1 - 0.2)
+
+print(netIncome)
+```
+HINT: I recommend you define a new numeric variable to store the tax rate and another for net income. For clarity you might want to rename `income` to make it obvious that it stores gross income.
+
+**Extension Exercise 3.3:** How would you answer the question: it's possible to write a much shorter R program without any extra variables, so why bother?
+
+It's very *important* to get into the habit of writing easy to follow R code. For this reason I have added comments and tried to select meaningful variable names.
+
+## 3.2 Using vectors
+
+Recall that at a Vector is a repeated group of the **same** data type, e.g., a vector of character strings.
+
+```{r}
+#Define a new vector
+
+greetings <- c("Hi!", "Hello", "Good morning", "Saludo", "Hej")
+greetings 
+
+```
+We can also check the type of `greetings`
+
+```{r}
+is.vector(greetings)
+```
+
+**Exercise 3.4:** Check the type of the variable `price` (from Section 3.1). What output do you expect?
+
+To fully exploit the power of vectors we can access subsets of elements. To do this we use the square bracket notation `[<n>]` where $n$ is the position of the required vector element.
+
+
+```{r}
+#Different ways to index vector elements
+greetings[2]
+
+n <- 3
+
+greetings[n]
+greetings[1:n]
+```
+
+Notice in the above R chunk, that we can access more than one element at a time by using the `:` operator to return a range of elements. The range can be specified by literals as in `[1:3]` or integer[^4] variables e.g., `[m:n]`.
+
+[^4]: If the index variables are not integers R will do its best to coerce the values to integers.
+
+## 3.3 Using data frames
+
+Data frames are amongst the most useful of the different data structures. These are two dimensional and unlike 2-dimensional matrices can comprise different constituent data types.
+
+Let's start by examining a built-in data set mt-cars that stores information about motor cars from the 1970s that is stored as a data frame.
+
+**Exercise 3.5:** How many variables and observations does `df` have? HINT: There are functions `nrow()` and `ncol()` if you can't be bothered to count.
+
+You can use the `$` operator to specify a column/variable from a data frame, for instance:
+
+Let's start by examining a built-in data set mt-cars that stores information about motor cars from the 1970s that is stored as a data frame.
+
+```{r}
+# Assign the built in data object mtcars to a new data frame df
+df <- mtcars
+
+# View the data frame in a new window in RStudio
+View(df)
+```
+
+**Exercise 3.5:** How many variables and observations does `df` have? HINT: There are functions `nrow()` and `ncol()` if you can't be bothered to count.
+
+You can use the `$` operator to specify a column/variable from a data frame, for instance:
+
+```{r}
+# Display the observations for cylinder numbers from df
+df$cyl
+
+# Apply the median function
+median(df$cyl)
+```
+**Exercise 3.6:** Using the `$` operator determine the mean and minimum mpg for cars in df.
+
+**Exercise 3.7:** Update the number of gears for the Mazda RX4 from 4 to 6. HINT: `mt$gear` is a vector so you can use an index to reference a particular element.
+
+So we can use the dollar operator to identify columns/variables. What about rows/observations? There are several ways to achieve this. Using indices via the `[ ]` notation notice that since a data frame has two dimensions two arguments are needed, but since we want the entire row we can leave the argument after the comma blank.
+
+```{r}
+# To retrieve the 2nd row we could have.
+df[2,]
+```
+
+**Exercise 3.8:** Modify the above code to retrieve columns 1-3. HINT: remember the `:` operators from when we were manipulating vectors.
+
+The other way to retrieve specific observations is when the rows have names e.g., "Mazda RX4", as in this case.
+
+```{r}
+# Retrieve the observation named "Valiant"
+df["Valiant",]
+```
 
