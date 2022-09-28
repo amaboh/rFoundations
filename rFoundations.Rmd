@@ -5,7 +5,7 @@ Below is an example of an R code chunk which can be executed from within the R N
 
 #install packages 
 
-pacman::p_load(pacman,modeest)
+pacman::p_load(pacman,modeest,ggplot2)
 
 ```{r}
 # This is an R code chunk
@@ -328,5 +328,216 @@ If you want to check what the data looks like:
 ```{r}
 head(worm, n=10)
 ```
+Now lets see how to do some descriptive data analysis. 
 
- 
+## Numerical summaries of categorical variables
+
+```{r}
+table(worm$Damp, worm$Vegetation)
+```
+
+ Play around with table - you can also do a table summary for one variable at a time.
+
+There are many additional packages that offer more sophisticated options. We will explore relevant ones later in the module. It is also possible to do frequency tables for more than one column at the same time (in effect creating a contingency table):
+
+## Graphical summaries for categorical variables
+
+Now let's look at ways of graphically summarising a column of categorical data from our data frame. Let's start with the vegetation, using the basic R library
+
+```{r}
+table(worm$Vegetation)
+barplot(table(worm$Vegetation))
+```
+It is also possible to use the same syntax for the two way table (contingency table)
+```{r}
+hist(worm$Soil.pH)
+```
+
+### Using ggplot2 (Optional)
+
+One library that is very handy for graphs is the {ggplot2}. 
+
+Before using a library you need to install it (first time) and load it. As the ggplot2 library is installed then you only need to load it:
+
+```{r}
+library(ggplot2)
+```
+
+There are a huge number of options in {ggplot2}. In most cases you start with `ggplot()`, supply a dataset and aesthetic mapping (with `aes()`). You then add on layers (like `geom_point()` or `geom_histogram()`), scales (like `scale_colour_brewer()`), faceting specifications (like `facet_wrap()`) and coordinate systems (like `coord_flip()`).
+
+```{r}
+head(worm)
+ggplot(data = worm)+geom_point(aes(x=Area,y=Soil.pH))
+ggplot(worm)+geom_bar(aes(x=Damp),fill="blue")
+```
+There is a lot you can specify in ggplot - see below for another example which now has well labelled titles and axis and a different theme.
+
+```{r}
+ggplot(worm) + geom_bar(aes(x=Vegetation), fill="blue") + labs(title="Vegetation from the Worms data") + scale_y_continuous(name="Frequency", breaks=c(0,5,10)) + theme_classic()
+```
+
+### Pie chart
+
+The code chunk below creates a pie chart. In order to do such a plot, the frequency table needs to be computed first, then transformed into a data frame, before finally being plotted using a ggplot option (coord_polar).
+
+Note that giving clear column names makes it easier and quicker to get a better labelled graph.
+
+```{r}
+w1 <-table(worm$Vegetation)
+w2 <- as.data.frame(w1)
+#w2
+
+colnames(w2) <- c("Vegetation", "Frequency")
+ggplot(w2, aes(x="", y=Frequency, fill=Vegetation))+geom_bar(width=1, stat = "identity") +coord_polar("y", start = 0) +labs(title="Pie Chart for the Vegeation from the Worms data")
+```
+
+### Graphical summaries for numerical variables
+
+#### Histogram
+
+A histogram to see the distribution of the values for one of the continuous columns can be created in many ways. 
+Using the base R code:
+
+```{r}
+hist(worm$Worm.density, xlab = "Density",ylab = "Count",main="Distribution of Density")
+```
+
+OR ggplot n also be used
+
+```{r}
+ggplot(worm, aes(x=Worm.density)) +
+  geom_histogram(fill="blue") +
+  labs(title="Histogram of Worm Density") +
+  scale_x_continuous(name="Worm Density", breaks = c(0,1,2,3,4,5,6,7,8,9)) +
+  theme_bw()
+
+```
+
+#### Box plot
+
+Another interesting perspective on a continuous variable, when it is part of a data set with categorical variable is to look at them both at the same time. A **boxplot** is a useful tool to achieve this.
+
+Using R Base:
+
+```{r}
+boxplot(worm$Worm.density~worm$Damp)
+```
+
+or using ggplot 
+```{r}
+#box plot
+ggplot(worm, aes(x=Worm.density, y=Damp)) +
+  geom_boxplot(fill="steelblue2") +
+  theme_classic() +
+  labs(title="Box Plot of Worm Density by Damp") +
+  coord_flip()
+```
+
+# 6. The diamonds dataset casestudy {#WS6}
+
+Now over to you!
+
+Have a go at performing a descriptive analysis of a data set. In order to do this we are going to make use of the *diamonds* data set that is available in R. 
+
+This data set is available in the *{ggplot}* library that was already loaded earlier in this session.
+
+(a) Run the code below to see the description of the diamond data and its contents.
+
+
+```{r}
+help("diamonds")
+```
+
+(b) Check that the data set *diamonds* does indeed contain the columns as in the help
+```{r}
+names(diamonds)
+```
+or to have more details on the columns:
+```{r}
+str(diamonds)
+```
+
+
+(c) The help description of the data set has the ranges for the variables in this data set. Check that this is the case in the data. 
+Are there any variables out of range?
+
+The ranges for the numerical variables can be obtained using the summary function. There are other ways.
+
+To run summary on one variable only use the \$ to specify the column.
+
+```{r}
+summary(diamonds$price)
+```
+
+
+The code above can be repeated for each of the variables in turn or use summary on all the data frame.
+```{r}
+summary("diamonds")
+```
+
+(d) How many levels (or different categories) are in the column labelled *cut*? 
+```{r}
+
+```
+
+It seems like there is an inconsistency in column z, the table shows a range of 0-3.18 but the actual data tells a different story. *Always check what is in the data*
+
+(d) How many levels (or different categories) are in the column labelled *cut*? 
+
+The levels of a categorical variable can be obtained using a table function.
+```{r}
+table(diamonds$cut)
+```
+
+The variable cut is categorical and has 5 levels or values.
+
+(e) Generate a numerical summary for each variable in the data set - take care to use the appropriate technique for each different variable type.
+
+The numerical summary can be done as in (c), but in general for numerical attributes a summary works well, a table for categorical variables.
+
+```{r}
+summary(diamonds)
+```
+
+(f) For each variable generate a plot, use different options and make sure the plots are labelled, and suitable to the type of variable.
+
+For example for a numerical attribute we would look at a histogram
+
+Firstly we can use the graph function in base R (this does not need a separate library)
+```{r}
+hist(diamonds$price, main = paste("Histogram of price"), xlab="Price")
+```
+(optional) another way to plot this can be achieved using ggplot library:
+```{r}
+ggplot(diamonds, aes(x=price)) + geom_histogram(binwidth = 10) +theme_classic() + ggtitle("Histogram of the Diamond Price")
+```
+
+The same code can be used for the remaining continuous variables.
+
+For the categorical variables we can use this shortcut that uses a table function to then make a plot.
+```{r}
+barplot(table(diamonds$cut), xlab = "Cut", ylab = "Frequency", main="Bar chart of the Frequency of each Diamond cut")
+```
+The same code can be used for the remaining continuous variables.
+
+For the categorical variables we can use this shortcut that uses a table function to then make a plot.
+```{r}
+barplot(table(diamonds$cut), xlab = "Cut",ylab = "Frequency", main="Bar chart of the Frequency of each Diamond cut")
+```
+
+(Optional) If we want to use the GGplot library then the following ggplot syntax can be used:
+```{r}
+ggplot(diamonds, aes(cut)) + geom_bar() + ggtitle("Frequency f different cuts") + theme_classic()
+```
+Other options include pie charts.
+
+(g) Explore the graphing of one categorical against one of the continuous variables in this data.
+
+This is a good opportunity to use a box plot.
+```{r}
+boxplot(diamonds$price~diamonds$cut, xlab ="Cut", ylab = "Price ")
+```
+```{r}
+ggplot(diamonds,aes(x=cut,y=price)) + geom_boxplot() + theme_classic() + ggtitle("Price vs Cut of Diamonds")
+```
+You can try the same changing the variable on the y axis.
